@@ -63,7 +63,7 @@ class ChefLoginViewBody extends StatelessWidget {
                   ),
                   CustomTextFormField(
                     controller: ChefLoginCubit.get(context).passwordController,
-                    prefixIcon: Icons.person,
+                    prefixIcon: Icons.password,
                   ),
                   SizedBox(height: 20),
                   CustomButton(

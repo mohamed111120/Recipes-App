@@ -4,6 +4,7 @@ import 'package:food_recipes/core/constants/app_colors.dart';
 import 'package:food_recipes/core/services/payment_service.dart';
 import 'package:food_recipes/features/user_home/view/user_home_view.dart';
 import '../chat_For_User/presentation/view/chat_users_view_for_user.dart';
+import '../user_favorites/presentation/view/user_favoriets_view.dart';
 import '../user_profile/presentation/view/user_profile_view.dart';
 import 'widgits/user_home_layout_bottom_nav_bar_chef_icon.dart';
 
@@ -16,7 +17,7 @@ class UserHomeLayoutView extends StatefulWidget {
 
 List<Widget> screens = [
   const UserHomeView(),
-  Container(),
+  const UserFavoritesView(),
   const ChatUsersViewForUser(),
   const UserProfileView(),
 ];

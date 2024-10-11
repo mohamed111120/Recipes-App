@@ -16,6 +16,7 @@ class RecipeModel {
   String? features;
   int? calories;
 
+
   RecipeModel({
     this.recipeId,
     required this.recipeName,

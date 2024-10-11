@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:food_recipes/features/single_category_view/presentation/view/single_category_view.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 
@@ -28,47 +28,83 @@ class CategorySection extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Container(
-                  height: 41,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: AppColors.primaryColor,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SingleCategoryView(
+                          categoryName: 'Breakfast',
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 41,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: AppColors.primaryColor,
+                    ),
+                    child: const Center(
+                        child: Text(
+                      'Breakfast',
+                      style: AppTextStyles.regular16,
+                    )),
                   ),
-                  child: const Center(
-                      child: Text(
-                    'Breakfast',
-                    style: AppTextStyles.regular16,
-                  )),
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: Container(
-                  height: 41,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: AppColors.primaryColor,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SingleCategoryView(
+                          categoryName: 'Lunch',
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 41,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: AppColors.primaryColor,
+                    ),
+                    child: const Center(
+                        child: Text(
+                      'Lunch',
+                      style: AppTextStyles.regular16,
+                    )),
                   ),
-                  child: const Center(
-                      child: Text(
-                    'Lunch',
-                    style: AppTextStyles.regular16,
-                  )),
                 ),
               ),
               SizedBox(width: 12),
               Expanded(
-                child: Container(
-                  height: 41,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(40),
-                    color: AppColors.primaryColor,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SingleCategoryView(
+                          categoryName: 'Dinner',
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: 41,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(40),
+                      color: AppColors.primaryColor,
+                    ),
+                    child: const Center(
+                        child: Text(
+                      'Dinner',
+                      style: AppTextStyles.regular16,
+                    )),
                   ),
-                  child: const Center(
-                      child: Text(
-                    'Dinner',
-                    style: AppTextStyles.regular16,
-                  )),
                 ),
               ),
             ],

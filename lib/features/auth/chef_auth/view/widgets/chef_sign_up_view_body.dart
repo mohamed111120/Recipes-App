@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_recipes/core/utils/custom_toast.dart';
 import 'package:food_recipes/features/chef_home_layout/chef_home_layout.dart';
 import '../../../../../../core/widgets/custom_button.dart';
 import '../../manager/chef_sign_up_cubit/chef_sign_up_cubit.dart';
@@ -32,8 +33,7 @@ class ChefSignUpViewBody extends StatelessWidget {
         return Container(
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image:AssetImage(
-                      'assets/auth_images/auth_background.png'),
+              image: AssetImage('assets/auth_images/auth_background.png'),
               fit: BoxFit.cover,
             ),
           ),
@@ -57,6 +57,11 @@ class ChefSignUpViewBody extends StatelessWidget {
                                 chefCubit.chefImageFile != null) {
                               chefCubit.chefSignUp();
                             } else {
+                              if (chefCubit.chefImageFile == null) {
+                                showToast(
+                                    message: 'Please select image',
+                                    state: ToastState.error);
+                              }
                               chefCubit.autovalidateMode =
                                   AutovalidateMode.always;
                             }

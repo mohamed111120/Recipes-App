@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_recipes/core/constants/app_images.dart';
 import 'package:food_recipes/features/auth/chef_auth/manager/chef_sign_up_cubit/chef_sign_up_cubit.dart';
 import 'package:food_recipes/main_models/chef_model.dart';
 
@@ -21,13 +22,14 @@ class AddPhotoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: 50,
-      backgroundImage: file == null ? null : FileImage(file!),
+      backgroundImage:
+          file == null ? const AssetImage(AppImages.addPhoto) : FileImage(file!),
       backgroundColor: Colors.white,
       child: Align(
         alignment: Alignment.bottomRight,
         child: GestureDetector(
-          onTap:onTap,
-          child: CircleAvatar(
+          onTap: onTap,
+          child: const CircleAvatar(
             radius: 15,
             backgroundColor: AppColors.primaryColor,
             child: Icon(Icons.add, color: Colors.white),

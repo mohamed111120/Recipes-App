@@ -10,26 +10,34 @@ import '../../../../core/services/storage_service.dart';
 import '../../../../core/utils/app_text_styles.dart';
 import '../../manger/chef_recipes_cubit.dart';
 
-class ChefRecipesView extends StatelessWidget {
+class ChefRecipesView extends StatefulWidget {
   const ChefRecipesView({super.key});
 
   @override
+  State<ChefRecipesView> createState() => _ChefRecipesViewState();
+}
+
+class _ChefRecipesViewState extends State<ChefRecipesView> {
+  @override
+  void initState() {
+    ChefRecipesCubit.get(context)
+      ..getChefProfileData()
+      ..getChefRecipes();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChefRecipesCubit(
-        databaseService: getIt.get<DatabaseService>(),
-        authService: getIt.get<AuthService>(),
-        storageService: getIt.get<StorageService>(),
-        mediaService: getIt.get<MediaService>(),
-      )..getChefProfileData()..getChefRecipes(),
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          title:  Text('Your Recipes',style: AppTextStyles.bold18.copyWith(color: Colors.black),),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          'Your Recipes',
+          style: AppTextStyles.bold18.copyWith(color: Colors.black),
         ),
-        body: const ChefRecipesViewBody(),
       ),
+      body: const ChefRecipesViewBody(),
     );
   }
 }

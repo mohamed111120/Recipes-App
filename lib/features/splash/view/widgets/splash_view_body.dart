@@ -9,11 +9,54 @@ import '../../../auth/user_auth/view/user_login_view.dart';
 import '../../../user_home_layout/user_home_layout_view.dart';
 import 'create_new_account_button.dart';
 
-class SplashViewBody extends StatelessWidget {
+class SplashViewBody extends StatefulWidget {
   const SplashViewBody({super.key});
 
   @override
+  State<SplashViewBody> createState() => _SplashViewBodyState();
+}
+
+class _SplashViewBodyState extends State<SplashViewBody>
+    with TickerProviderStateMixin {
+  late AnimationController firstRowAnimationController;
+  late AnimationController secondRowAnimationController;
+  late Animation<double> firstRowAnimation;
+  late Animation<double> secondRowAnimation;
+  double rowTowScale = 1.5;
+
+  @override
+  void initState() {
+    firstRowAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    secondRowAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+    firstRowAnimation =
+        Tween<double>(begin: 30, end: 0).animate(firstRowAnimationController);
+    secondRowAnimation =
+        Tween<double>(begin: 30, end: 0).animate(secondRowAnimationController);
+
+    super.initState();
+  }
+  @override
+  void dispose() {
+    firstRowAnimationController.dispose();
+    secondRowAnimationController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    firstRowAnimationController.forward();
+    secondRowAnimationController.forward()..then((value) {
+      setState(() {
+        rowTowScale = 1;
+      });
+    },);
+ 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       width: double.infinity,
@@ -37,19 +80,45 @@ class SplashViewBody extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 80),
-              const SplashFoodRow(
-                firstImage: AppImages.splashFood1,
-                secondImage: AppImages.splashFood2,
+              AnimatedBuilder(
+                animation: firstRowAnimationController,
+                builder: (context, child) {
+                  return Transform(
+                    alignment: Alignment.centerRight,
+                    transform: Matrix4.identity()
+                      ..rotateZ(firstRowAnimation.value * 3.14 / 180),
+                    child: SplashFoodRow(
+                      firstImage: AppImages.splashFood1,
+                      secondImage: AppImages.splashFood2,
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 25),
-              const SplashFoodRow(
-                firstImage: AppImages.splashFood3,
-                secondImage: AppImages.splashFood4,
+              AnimatedScale(
+                scale: rowTowScale,
+
+                duration: const Duration(seconds:2),
+                curve: Curves.fastOutSlowIn,
+                child: const SplashFoodRow(
+                  firstImage: AppImages.splashFood3,
+                  secondImage: AppImages.splashFood4,
+                ),
               ),
               const SizedBox(height: 25),
-              const SplashFoodRow(
-                firstImage: AppImages.splashFood5,
-                secondImage: AppImages.splashFood6,
+              AnimatedBuilder(
+                animation: secondRowAnimationController,
+                builder: (context, child) {
+                  return Transform(
+                    alignment: Alignment.centerLeft,
+                    transform: Matrix4.identity()
+                      ..rotateZ(secondRowAnimation.value * 3.14 / 180),
+                    child: SplashFoodRow(
+                      firstImage: AppImages.splashFood5,
+                      secondImage: AppImages.splashFood6,
+                    ),
+                  );
+                },
               ),
               const SizedBox(height: 60),
               const Text(

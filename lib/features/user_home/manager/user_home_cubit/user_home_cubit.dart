@@ -10,6 +10,7 @@ import 'package:food_recipes/main_models/user_model.dart';
 import 'package:meta/meta.dart';
 
 import '../../../../main_models/recipe_model/recipe_model.dart';
+import '../../../../main_models/recipe_model/recipe_reviews.dart';
 
 part 'user_home_state.dart';
 
@@ -53,4 +54,5 @@ class UserHomeCubit extends Cubit<UserHomeState> {
   Future<void> updateRecipeCount ({required String recipeId}) async {
     await databaseService.updateRecipeCount(recipeId);
   }
+
 }

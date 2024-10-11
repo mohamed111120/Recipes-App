@@ -20,11 +20,12 @@ class UserLoginViewBody extends StatelessWidget {
               .showSnackBar(SnackBar(content: Text(state.error)));
         }
         if (state is UserLoginSuccess) {
-          Navigator.push(
+          Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
                 builder: (context) => const UserHomeLayoutView(),
-              ));
+              ),
+              (route) => false);
         }
       },
       builder: (context, state) {
@@ -60,7 +61,7 @@ class UserLoginViewBody extends StatelessWidget {
                   ),
                   CustomTextFormField(
                     controller: UserLoginCubit.get(context).passwordController,
-                    prefixIcon: Icons.person,
+                    prefixIcon: Icons.password,
                   ),
                   SizedBox(height: 20),
                   CustomButton(

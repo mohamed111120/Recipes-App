@@ -21,6 +21,7 @@ class UserHomeView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -41,7 +42,6 @@ class UserHomeView extends StatelessWidget {
                   ),
                 ],
               ),
-              const Icon(Icons.favorite_border,color:  AppColors.primaryColor,),
             ],
           ),
         ),

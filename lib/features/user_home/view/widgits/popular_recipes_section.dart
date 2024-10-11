@@ -39,7 +39,7 @@ class PopularRecipesSection extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
-                  child: Text('waiting'),
+                  child: CircularProgressIndicator(),
                 );
               } else if (snapshot.data!.docs.isEmpty) {
                 return const Center(
@@ -51,9 +51,10 @@ class PopularRecipesSection extends StatelessWidget {
                         as List<QueryDocumentSnapshot<RecipeModel>>;
                 popularRecipes.sort(
                   (a, b) {
-                    return b.data().clickCount
-                            ?.toString()
-                            .compareTo(a.data().clickCount.toString() ?? '0') ??
+                    return b
+                            .data()
+                            .clickCount
+                            ?.compareTo(a.data().clickCount as num) ??
                         0;
                   },
                 );
@@ -69,10 +70,12 @@ class PopularRecipesSection extends StatelessWidget {
                         return PopularRecipeWidget(
                           onTap: () async {
                             await UserHomeCubit.get(context).updateRecipeCount(
-                              recipeId: popularRecipes[index].data().recipeId ?? '',
+                              recipeId:
+                                  popularRecipes[index].data().recipeId ?? '',
                             );
                             var chef = await UserHomeCubit.get(context).getChef(
-                                chefId: popularRecipes[index].data().chefUid ?? '');
+                                chefId:
+                                    popularRecipes[index].data().chefUid ?? '');
 
                             Navigator.push(
                               context,

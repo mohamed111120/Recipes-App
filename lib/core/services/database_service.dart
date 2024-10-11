@@ -6,11 +6,13 @@ import 'package:food_recipes/main_models/chef_model.dart';
 import 'package:food_recipes/main_models/recipe_model/recipe_model.dart';
 import '../../main_models/chat_model.dart';
 import '../../main_models/message_model.dart';
+import '../../main_models/recipe_model/recipe_reviews.dart';
+import '../../main_models/recipe_model/recipe_steps_model.dart';
 import '../../main_models/user_model.dart';
 import 'auth_service.dart';
 
 class DatabaseService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   CollectionReference? _usersCollection;
   CollectionReference? _chatsCollection;
@@ -24,7 +26,7 @@ class DatabaseService {
 
   // _setupCollectionReference
   _setupCollectionReference() {
-    _usersCollection = _firestore.collection('users').withConverter<UserModel>(
+    _usersCollection = firestore.collection('users').withConverter<UserModel>(
       fromFirestore: (snapshot, _) {
         return UserModel.fromJson(snapshot.data()!);
       },
@@ -33,7 +35,7 @@ class DatabaseService {
       },
     );
 
-    _chatsCollection = _firestore.collection('chats').withConverter<ChatModel>(
+    _chatsCollection = firestore.collection('chats').withConverter<ChatModel>(
       fromFirestore: (snapshot, _) {
         return ChatModel.fromJson(snapshot.data()!);
       },
@@ -41,7 +43,7 @@ class DatabaseService {
         return chatModel.toJson();
       },
     );
-    _chefsCollection = _firestore.collection('chefs').withConverter<ChefModel>(
+    _chefsCollection = firestore.collection('chefs').withConverter<ChefModel>(
       fromFirestore: (snapshot, _) {
         return ChefModel.fromJson(snapshot.data()!);
       },
@@ -50,7 +52,7 @@ class DatabaseService {
       },
     );
     _recipesCollection =
-        _firestore.collection('recipes').withConverter<RecipeModel>(
+        firestore.collection('recipes').withConverter<RecipeModel>(
       fromFirestore: (snapshot, _) {
         return RecipeModel.fromJson(snapshot.data()!);
       },
@@ -91,8 +93,14 @@ class DatabaseService {
     }
   }
 
-  Future<void>  deleteRecipe({required String recipeId}) async {
+  Future<void> deleteRecipe({required String recipeId}) async {
     await _recipesCollection!.doc(recipeId).delete();
+  }
+
+  Future<void> deleteFromFavorites({required String recipeId}) async {
+    await _usersCollection!.doc(_authServices.uid).update({
+      'favoriteRecipes': FieldValue.arrayRemove([recipeId])
+    });
   }
 
   // getUserProfile
@@ -181,6 +189,11 @@ class DatabaseService {
         as Future<DocumentSnapshot<ChefModel?>>;
   }
 
+  Future<DocumentSnapshot<UserModel?>> getUser(String userId) {
+    return _usersCollection!.doc(userId).get()
+        as Future<DocumentSnapshot<UserModel?>>;
+  }
+
   Future<UserModel> getCurrentUser(String userid) async {
     var result = await _usersCollection!.where('uid', isEqualTo: userid).get();
     UserModel currentUser = result.docs.first.data() as UserModel;
@@ -206,5 +219,89 @@ class DatabaseService {
   Future<QuerySnapshot<RecipeModel?>> getChefRecipes(String chefId) {
     return _recipesCollection!.where('chef uid', isEqualTo: chefId).get()
         as Future<QuerySnapshot<RecipeModel?>>;
+  }
+
+  Future<void> rateRecipe({
+    required String recipeId,
+    required RecipeReviews recipeReview,
+  }) async {
+    await _recipesCollection!.doc(recipeId).update(
+      {
+        'recipe reviews': FieldValue.arrayUnion(
+          [
+            recipeReview.toJson(),
+          ],
+        ),
+      },
+    );
+  }
+
+  Stream<DocumentSnapshot<RecipeModel>> getRecipeReviews(
+      {required String recipeId}) {
+    return _recipesCollection!.doc(recipeId).snapshots()
+        as Stream<DocumentSnapshot<RecipeModel>>;
+  }
+
+  Future<QuerySnapshot<RecipeModel>> getRecipesByCategory(String category) {
+    return _recipesCollection!.where('category', isEqualTo: category).get()
+        as Future<QuerySnapshot<RecipeModel>>;
+  }
+
+  addToFavourites({required String recipeId, required String userId}) async {
+    await _usersCollection!.doc(userId).update({
+      'favoriteRecipes': FieldValue.arrayUnion(
+        [recipeId],
+      )
+    });
+  }
+
+  deleteFromFavourites(
+      {required String recipeId, required String userId}) async {
+    await _usersCollection!.doc(userId).update({
+      'favoriteRecipes': FieldValue.arrayRemove(
+        [recipeId],
+      )
+    });
+  }
+
+  Future<bool?> isRecipeFavourite(
+      {required String recipeId, required String userId}) async {
+    DocumentSnapshot<UserModel> user = await _usersCollection!.doc(userId).get()
+        as DocumentSnapshot<UserModel>;
+    return user.data()!.favoriteRecipes?.contains(recipeId);
+  }
+
+  Future<List<String>?> getFavoritesRecipes({required String userId}) async {
+    DocumentSnapshot<UserModel> user = await _usersCollection!.doc(userId).get()
+        as DocumentSnapshot<UserModel>;
+    return user.data()!.favoriteRecipes;
+  }
+
+  Future<RecipeModel?> getRecipe({required String recipeId}) async {
+    DocumentSnapshot<RecipeModel?> recipe = await _recipesCollection!
+        .doc(recipeId)
+        .get() as DocumentSnapshot<RecipeModel?>;
+    return recipe.data();
+  }
+
+  editRecipe({
+    required String recipeId,
+    required String recipeName,
+    required String recipeDescription,
+    required String category,
+    required String features,
+    required int recipeTime,
+    required List<RecipeSteps> recipeSteps,
+  }) async {
+    await _recipesCollection!.doc(recipeId).update({
+      'recipe name': recipeName,
+      'recipe description': recipeDescription,
+      'recipe steps': recipeSteps.map(
+        (e) => e.toJson(),
+      ),
+      'category': category,
+      'features': features,
+      'recipe time': recipeTime,
+    });
   }
 }

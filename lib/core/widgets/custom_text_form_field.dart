@@ -11,6 +11,7 @@ class CustomTextFormField extends StatelessWidget {
     this.keyboardType,
     this.hintText,
     this.stepNum,
+    this.validator,
   });
 
   final void Function()? onTap;
@@ -19,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
   final TextInputType? keyboardType;
   final String? hintText;
   final int? stepNum;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +30,14 @@ class CustomTextFormField extends StatelessWidget {
         minLines: 1,
         maxLines: 5,
         controller: controller,
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter text';
-          } else {
-            return null;
-          }
-        },
+        validator: validator ??
+            (value) {
+              if (value == null || value.isEmpty) {
+                return 'Please enter text';
+              } else {
+                return null;
+              }
+            },
         keyboardType: keyboardType,
         onTap: onTap,
         decoration: InputDecoration(

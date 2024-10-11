@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_recipes/core/utils/helper_functions/check_is_user_function.dart';
@@ -26,19 +27,23 @@ class UserLoginCubit extends Cubit<UserLoginState> {
     emit(UserLoginLoading());
 
     try {
-      await authService.login(
+    var result =  await authService.login(
         email: emailController.text,
         password: passwordController.text,
       );
+    if (result) {
       bool? isUser = await checkISUser(authService.uid);
       if (isUser) {
         SharedService.set(key: SharedKeys.uid, value: authService.uid);
         emit(UserLoginSuccess());
       } else {
         await authService.logout();
+        SharedService.remove(key: SharedKeys.uid);
         emit(UserLoginError(error: 'You are not a user'));
       }
-    } catch (e) {
+    }
+
+    } on FirebaseAuthException catch (e) {
       emit(UserLoginError(error: e.toString()));
     }
   }

@@ -43,22 +43,23 @@ class UserSignUpCubit extends Cubit<UserSignUpState> {
   Future<void> userSignUp() async {
     emit(UserSignUpLoading());
     try {
-     await authService.signUp(
+      await authService.signUp(
         email: emailController?.text ?? '',
         password: passwordController?.text ?? '',
         name: nameController?.text ?? '',
       );
-     if (userImageFile != null) {
-       await uploadUserImage(image: userImageFile!);
-     }
+      if (userImageFile != null) {
+        await uploadUserImage(image: userImageFile!);
+      }
       await createUserProfile(
         userModel: UserModel(
-        uid: authService.uid,
-        name: nameController?.text ?? '',
-        email: emailController?.text ?? '',
-        phoneNumber: phoneNumberController?.text ?? '',
-        address: addressController?.text ?? '',
-        photoUrl: userImageUrl ?? '',
+          favoriteRecipes: [],
+          uid: authService.uid,
+          name: nameController?.text ?? '',
+          email: emailController?.text ?? '',
+          phoneNumber: phoneNumberController?.text ?? '',
+          address: addressController?.text ?? '',
+          photoUrl: userImageUrl ?? '',
         ),
       );
       SharedService.set(key: SharedKeys.uid, value: authService.uid);

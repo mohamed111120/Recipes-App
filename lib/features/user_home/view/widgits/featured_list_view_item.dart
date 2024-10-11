@@ -12,27 +12,17 @@ class FeaturedListViewItem extends StatelessWidget {
   const FeaturedListViewItem({
     super.key,
     required this.recipeModel,
-    required this.chefModel,
+    required this.chefModel, this.onTap,
   });
 
   final RecipeModel recipeModel;
   final ChefModel chefModel;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async{
-        await UserHomeCubit.get(context)
-            .updateRecipeCount(recipeId: recipeModel.recipeId ?? '');
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return UserRecipeView(
-              recipeModel: recipeModel,
-              chefModel: chefModel,
-            );
-          },
-        ));
-      },
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(16),
         width: 264,

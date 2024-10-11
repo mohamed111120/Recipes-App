@@ -43,7 +43,7 @@ class ChefRecipesViewBody extends StatelessWidget {
                           crossAxisCount: 2,
                           mainAxisSpacing: 10,
                           crossAxisSpacing: 10,
-                          childAspectRatio: 2 / 2.8,
+                          childAspectRatio: 2 / 2.5,
                         ),
                         itemBuilder: (context, index) {
                           RecipeModel? recipeModel =

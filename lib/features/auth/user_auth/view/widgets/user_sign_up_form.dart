@@ -45,9 +45,15 @@ class UserSignUpForm extends StatelessWidget {
                 AppTextStyles.bold16.copyWith(color: AppColors.secondaryColor),
           ),
           CustomTextFormField(
-            controller: UserSignUpCubit.get(context).emailController,
-            prefixIcon: Icons.person,
-          ),
+              controller: UserSignUpCubit.get(context).emailController,
+              prefixIcon: Icons.email,
+              validator: (value) {
+                if (value == null || value.isEmpty || !isEmail(value)) {
+                  return 'Please enter valid email';
+                } else {
+                  return null;
+                }
+              }),
           Text(
             'Phone Number',
             style:
@@ -55,7 +61,7 @@ class UserSignUpForm extends StatelessWidget {
           ),
           CustomTextFormField(
             controller: UserSignUpCubit.get(context).phoneNumberController,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.phone_android,
           ),
           Text(
             'Password',
@@ -64,7 +70,14 @@ class UserSignUpForm extends StatelessWidget {
           ),
           CustomTextFormField(
             controller: UserSignUpCubit.get(context).passwordController,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.password_outlined,
+            validator: (value) {
+              if (value == null || value.isEmpty || !validatePassWord(value)) {
+                return 'Please enter valid password';
+              } else {
+                return null;
+              }
+            },
           ),
           Text(
             'Confirm Password',
@@ -72,8 +85,16 @@ class UserSignUpForm extends StatelessWidget {
                 AppTextStyles.bold16.copyWith(color: AppColors.secondaryColor),
           ),
           CustomTextFormField(
-            // ToDo Confirm Password
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.password_outlined,
+            validator: (value) {
+              if (value == null ||
+                  value.isEmpty ||
+                  UserSignUpCubit.get(context).passwordController?.text != value) {
+                return 'Please enter text';
+              } else {
+                return null;
+              }
+            },
           ),
           Text(
             'Address',
@@ -82,10 +103,26 @@ class UserSignUpForm extends StatelessWidget {
           ),
           CustomTextFormField(
             controller: UserSignUpCubit.get(context).addressController,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.add_location_alt_rounded,
           ),
         ],
       ),
     );
+  }
+
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
+
+  bool validatePassWord(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 }

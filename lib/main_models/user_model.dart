@@ -5,6 +5,7 @@ class UserModel {
   String? photoUrl;
   String? phoneNumber;
   String? address;
+  List<String>? favoriteRecipes;
 
   UserModel({
     required this.name,
@@ -13,6 +14,7 @@ class UserModel {
     required this.photoUrl,
     required this.phoneNumber,
     required this.address,
+    required this.favoriteRecipes,
   });
 
 
@@ -23,6 +25,7 @@ class UserModel {
     photoUrl = json['photoUrl'];
     phoneNumber = json['phoneNumber'];
     address = json['address'];
+    favoriteRecipes =List<String>.from(json['favoriteRecipes']);
   }
 
   Map<String, dynamic> toJson() {
@@ -33,6 +36,7 @@ class UserModel {
       'photoUrl': photoUrl,
       'phoneNumber': phoneNumber,
       'address': address,
+      'favoriteRecipes': favoriteRecipes,
     };
   }
 }

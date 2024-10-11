@@ -5,4 +5,6 @@ abstract class AppImages {
   static const String splashFood4 = 'assets/splash_images/4.svg';
   static const String splashFood5 = 'assets/splash_images/5.svg';
   static const String splashFood6 = 'assets/splash_images/6.svg';
+  static const String addPhoto = 'assets/auth_images/add_photo.png';
+
 }

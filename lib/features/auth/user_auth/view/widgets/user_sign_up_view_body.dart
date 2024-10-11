@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:food_recipes/core/utils/custom_toast.dart';
 import 'package:food_recipes/core/widgets/custom_button.dart';
 import 'package:food_recipes/features/user_home_layout/user_home_layout_view.dart';
+import '../../../../../core/constants/app_colors.dart';
 import '../../manager/user_sign_up_cubit/user_sign_up_cubit.dart';
 import 'user_sign_up_form.dart';
 
@@ -20,12 +22,12 @@ class UserSignUpViewBody extends StatelessWidget {
           );
         }
         if (state is UserSignUpSuccess) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const UserHomeLayoutView(),
-            ),
-          );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserHomeLayoutView(),
+              ),
+              (route) => false);
         }
       },
       builder: (context, state) {
@@ -44,30 +46,46 @@ class UserSignUpViewBody extends StatelessWidget {
                 const SliverToBoxAdapter(
                   child: UserSignUpForm(),
                 ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Column(
-                    children: [
-                      const Spacer(),
-                      Align(
-                        child: CustomButton(
-                          text: 'Sign Up',
-                          onTap: () {
-                            if (userCubit.formKey.currentState!.validate() &&
-                                userCubit.userImageFile != null) {
-                              userCubit.userSignUp();
-                            } else {
-                              userCubit.autovalidateMode =
-                                  AutovalidateMode.always;
-                            }
-                          },
-                        ),
+                BlocBuilder<UserSignUpCubit, UserSignUpState>(
+                  builder: (context, state) {
+                    return SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Column(
+                        children: [
+                          const Spacer(),
+                          Align(
+                            child: state is UserSignUpLoading
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.secondaryColor,
+                                    ),
+                                  )
+                                : CustomButton(
+                                    text: 'Sign Up',
+                                    onTap: () {
+                                      if (userCubit.formKey.currentState!
+                                              .validate() &&
+                                          userCubit.userImageFile != null) {
+                                        userCubit.userSignUp();
+                                      } else {
+                                        if (userCubit.userImageFile == null) {
+                                          showToast(
+                                              message: 'Please Add Image',
+                                              state: ToastState.error);
+                                        }
+                                        userCubit.autovalidateMode =
+                                            AutovalidateMode.always;
+                                      }
+                                    },
+                                  ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 )
               ],
             ),

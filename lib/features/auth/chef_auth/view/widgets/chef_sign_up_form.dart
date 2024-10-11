@@ -46,7 +46,14 @@ class ChefSignUpForm extends StatelessWidget {
           ),
           CustomTextFormField(
             controller: ChefSignUpCubit.get(context).emailController,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.email,
+            validator: (value) {
+              if (value == null || value.isEmpty || !isEmail(value)) {
+                return 'Please enter valid password';
+              } else {
+                return null;
+              }
+            },
           ),
           Text(
             'Phone Number',
@@ -56,7 +63,7 @@ class ChefSignUpForm extends StatelessWidget {
           CustomTextFormField(
             keyboardType: TextInputType.phone,
             controller: ChefSignUpCubit.get(context).phoneNumberController,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.phone_android,
           ),
           Text(
             'Password',
@@ -65,7 +72,14 @@ class ChefSignUpForm extends StatelessWidget {
           ),
           CustomTextFormField(
             controller: ChefSignUpCubit.get(context).passwordController,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.password,
+            validator: (value) {
+              if (value == null || value.isEmpty || !validatePassWord(value)) {
+                return 'Please enter valid password';
+              } else {
+                return null;
+              }
+            },
           ),
           Text(
             'Confirm Password',
@@ -73,8 +87,16 @@ class ChefSignUpForm extends StatelessWidget {
                 AppTextStyles.bold16.copyWith(color: AppColors.secondaryColor),
           ),
           CustomTextFormField(
-            // TODO : add confirm password
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.password,
+            validator:  (value) {
+              if (value == null ||
+                  value.isEmpty ||
+                  ChefSignUpCubit.get(context).passwordController?.text != value) {
+                return 'Please enter text';
+              } else {
+                return null;
+              }
+            },
           ),
           Text(
             'Address',
@@ -83,7 +105,7 @@ class ChefSignUpForm extends StatelessWidget {
           ),
           CustomTextFormField(
             controller: ChefSignUpCubit.get(context).addressController,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.add_location_alt_rounded,
           ),
           Text(
             'Years Of Experience',
@@ -93,10 +115,25 @@ class ChefSignUpForm extends StatelessWidget {
           CustomTextFormField(
             keyboardType: TextInputType.number,
             controller: ChefSignUpCubit.get(context).yearsOfExperience,
-            prefixIcon: Icons.person,
+            prefixIcon: Icons.info,
           ),
         ],
       ),
     );
+  }
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
+
+  bool validatePassWord(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 }

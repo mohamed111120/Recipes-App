@@ -7,8 +7,11 @@ import '../../../../core/services/auth_service.dart';
 import '../../../../core/services/media_service.dart';
 import '../../../../core/services/storage_service.dart';
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../../core/widgets/custom_button.dart';
 import '../../../../main_models/recipe_model/recipe_model.dart';
 import '../../manger/chef_recipes_cubit.dart';
+import 'chef_recipes_view.dart';
+
 class EditRecipeView extends StatelessWidget {
   const EditRecipeView({super.key, required this.recipeModel});
 
@@ -16,28 +19,50 @@ class EditRecipeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChefRecipesCubit(
-        databaseService: getIt.get<DatabaseService>(),
-        authService: getIt.get<AuthService>(),
-        storageService: getIt.get<StorageService>(),
-        mediaService: getIt.get<MediaService>(),
-      ),
-      child: Builder(builder: (context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              recipeModel.recipeName ?? '',
-              style: AppTextStyles.bold18.copyWith(color: Colors.black),
-            ),
-            actions: [
-              IconButton(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          recipeModel.recipeName ?? '',
+          style: AppTextStyles.bold18.copyWith(color: Colors.black),
+        ),
+        actions: [
+          BlocBuilder<ChefRecipesCubit, ChefRecipesState>(
+            builder: (context, state) {
+              return IconButton(
                 onPressed: () {
-                  ChefRecipesCubit.get(context)
-                      .deleteRecipe(recipeId: recipeModel.recipeId!)
-                      .then(
-                    (value) {
-                      Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                          title: const Text('Are you sure you want to delete?'),
+                          actions: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: CustomButton(
+                                    text: 'No',
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: CustomButton(
+                                    text: 'Yes',
+                                    onTap: () {
+                                      ChefRecipesCubit.get(context)
+                                          .deleteRecipe(
+                                              recipeId: recipeModel.recipeId!)
+                                          .then((value) {
+                                        Navigator.pop(context);
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ]);
                     },
                   );
                 },
@@ -45,14 +70,14 @@ class EditRecipeView extends StatelessWidget {
                   Icons.delete_forever_outlined,
                   color: Colors.red,
                 ),
-              ),
-            ],
+              );
+            },
           ),
-          body: EditRecipeViewBody(
-            recipeModel: recipeModel,
-          ),
-        );
-      }),
+        ],
+      ),
+      body: EditRecipeViewBody(
+        recipeModel: recipeModel,
+      ),
     );
   }
 }

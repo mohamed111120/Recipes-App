@@ -30,8 +30,7 @@ class AuthService {
         return true;
       }
     } on Exception catch (e) {
-      // TODO: Handle exception
-      print(e);
+      rethrow;
     }
     return false;
   }

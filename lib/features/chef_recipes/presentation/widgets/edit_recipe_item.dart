@@ -14,63 +14,64 @@ class EditRecipeItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          height: 165,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-            image: DecorationImage(
-              image: NetworkImage(
-                recipeModel.recipePhoto ?? '',
+        Expanded(
+          child: Container(
+            // height: 150,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
               ),
-              fit: BoxFit.cover,
+              image: DecorationImage(
+                image: NetworkImage(
+                  recipeModel.recipePhoto ?? '',
+                ),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
             color: AppColors.secondaryColor.withOpacity(.9),
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(10),
                 bottomRight: Radius.circular(10)),
           ),
           child: Column(
             children: [
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Spacer(),
-                  Text(recipeModel.recipeName ?? '',
-                      style:
-                          AppTextStyles.bold14.copyWith(color: Colors.white)),
-                  const Spacer(
-                    flex: 2,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              EditRecipeView(recipeModel: recipeModel),
-                        ),
-                      );
-                    },
-                    child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.all(6),
-                        child: Text('Edit',
-                            style: AppTextStyles.bold14
-                                .copyWith(color: Colors.white))),
-                  ),
-                  const Spacer(),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(recipeModel.recipeName ?? '',
+                          style:
+                              AppTextStyles.bold14.copyWith(color: Colors.white)),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditRecipeView(recipeModel: recipeModel),
+                            ));
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.all(6),
+                          child: Text('Edit',
+                              style: AppTextStyles.bold14
+                                  .copyWith(color: Colors.white))),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 8),
             ],

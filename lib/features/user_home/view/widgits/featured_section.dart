@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:food_recipes/core/constants/app_colors.dart';
-import 'package:food_recipes/features/user_home/manager/user_home_cubit/user_home_cubit.dart';
 import 'package:food_recipes/features/user_home/manager/user_home_cubit/user_home_cubit.dart';
 import 'package:food_recipes/main_models/chef_model.dart';
 import 'package:food_recipes/main_models/recipe_model/recipe_model.dart';
 
 import '../../../../core/utils/app_text_styles.dart';
+import '../../../user_recipe_page/presentation/view/user_recipe_view.dart';
 import 'featured_list_view_item.dart';
 
 class FeaturedSection extends StatelessWidget {
@@ -53,9 +52,23 @@ class FeaturedSection extends StatelessWidget {
                                   if (snapshot.hasData) {
                                     ChefModel chef =
                                         snapshot.data?.data() as ChefModel;
-                                    return FeaturedListViewItem(
-                                      recipeModel: recipe,
-                                      chefModel: chef,
+                                    return GestureDetector(
+                                      onTap: () async{
+                                        await UserHomeCubit.get(context)
+                                            .updateRecipeCount(recipeId: recipe.recipeId ?? '');
+                                        Navigator.push(context, MaterialPageRoute(
+                                          builder: (context) {
+                                            return UserRecipeView(
+                                              recipeModel: recipe,
+                                              chefModel: chef,
+                                            );
+                                          },
+                                        ));
+                                      },
+                                      child: FeaturedListViewItem(
+                                        recipeModel: recipe,
+                                        chefModel: chef,
+                                      ),
                                     );
                                   } else {
                                     return const Center(
