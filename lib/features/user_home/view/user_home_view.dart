@@ -27,17 +27,14 @@ class UserHomeView extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  const Icon(
-                    Icons.wb_sunny_outlined,
-                    color: AppColors.primaryColor,
-                  ),
+                  Icon(Icons.fastfood ,color:  AppColors.primaryColor,),
                   const SizedBox(
-                    width: 4,
+                    width: 6,
                   ),
                   Text(
-                    'Good Morning',
-                    style: AppTextStyles.regular14.copyWith(
-                      color: const Color(0xff0A2533),
+                    'Welcome To Recipes App',
+                    style: AppTextStyles.bold20.copyWith(
+                      color: AppColors.secondaryColor,
                     ),
                   ),
                 ],

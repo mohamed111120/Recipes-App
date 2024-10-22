@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -55,8 +56,10 @@ class ChefSignUpCubit extends Cubit<ChefSignUpState> {
           image: chefImageFile!,
         );
       }
+      String? fcm = await FirebaseMessaging.instance.getToken();
       await createChefProfile(
         chefModel: ChefModel(
+          fcm: fcm,
           name: nameController?.text ?? '',
           email: emailController?.text ?? '',
           uid: authService.uid,

@@ -24,11 +24,10 @@ class UserProfileView extends StatelessWidget {
         authService: getIt.get<AuthService>(),
         storageService: getIt.get<StorageService>(),
         mediaService: getIt.get<MediaService>(),
-      )
-        ..getUserProfileData(),
+      )..getUserProfileData(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('User Profile'),
+          title: const Text('Profile'),
           actions: [
             BlocConsumer<UserProfileCubit, UserProfileState>(
               listener: (context, state) {

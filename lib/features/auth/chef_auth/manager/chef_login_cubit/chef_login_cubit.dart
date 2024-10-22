@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_recipes/core/services/auth_service.dart';
@@ -47,6 +48,11 @@ class ChefLoginCubit extends Cubit<ChefLoginState> {
       bool? isUser = await checkISUser( authService.uid);
       if (isChef ) {
         SharedService.set(key: SharedKeys.uid, value: authService.uid);
+        String? fcm = await FirebaseMessaging.instance.getToken();
+        await  databaseService.updateChefFCM(
+          chefId: authService.uid!,
+          fcm: fcm!,
+        );
         emit(ChefLoginSuccess());
       } else if(isUser) {
         await authService.logout();

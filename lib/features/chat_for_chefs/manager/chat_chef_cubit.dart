@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dash_chat_2/dash_chat_2.dart';
@@ -8,8 +7,10 @@ import 'package:food_recipes/core/services/auth_service.dart';
 import 'package:food_recipes/core/services/database_service.dart';
 import 'package:food_recipes/core/services/media_service.dart';
 import 'package:food_recipes/core/services/storage_service.dart';
+import 'package:food_recipes/main_models/chef_model.dart';
 import 'package:meta/meta.dart';
 
+import '../../../core/services/http.dart';
 import '../../../main_models/chat_model.dart';
 import '../../../main_models/message_model.dart';
 import '../../../main_models/user_model.dart';
@@ -17,11 +18,10 @@ import '../../../main_models/user_model.dart';
 part 'chat_chef_state.dart';
 
 class ChatChefCubit extends Cubit<ChatChefState> {
-  ChatChefCubit(
-      {required this.databaseService,
-      required this.authService,
-      required this.mediaService,
-      required this.storageService})
+  ChatChefCubit({required this.databaseService,
+    required this.authService,
+    required this.mediaService,
+    required this.storageService})
       : super(ChatChefInitial());
 
   static ChatChefCubit get(context) => BlocProvider.of(context);
@@ -31,14 +31,13 @@ class ChatChefCubit extends Cubit<ChatChefState> {
   final MediaService mediaService;
   final StorageService storageService;
 
-
   String? chatImage;
 
   ChatUser getCurrentChef() {
     return ChatUser(id: authService.uid!);
   }
 
-  Stream<QuerySnapshot<UserModel>> getAllUsers()  {
+  Stream<QuerySnapshot<UserModel>> getAllUsers() {
     return databaseService.getAllUsers();
   }
 
@@ -64,7 +63,6 @@ class ChatChefCubit extends Cubit<ChatChefState> {
       }
     }
   }
-
 
   Stream<DocumentSnapshot<ChatModel>> getChatData(
       {required String uid1, required String uid2}) {
@@ -109,6 +107,7 @@ class ChatChefCubit extends Cubit<ChatChefState> {
     );
     return chatMessages;
   }
+
   Future<File?> getImageFormGallery() async {
     return await mediaService.getImageFromGallary();
   }
@@ -125,6 +124,7 @@ class ChatChefCubit extends Cubit<ChatChefState> {
     );
     return chatImage;
   }
+
   Future<void> sendMessage({
     required ChatMessage chatMessage,
     required String otherUserUid,
@@ -137,10 +137,15 @@ class ChatChefCubit extends Cubit<ChatChefState> {
           messageType: MessageType.image,
           sentAt: Timestamp.fromDate(chatMessage.createdAt),
         );
-        databaseService.sendChatMessage(
+        await databaseService.sendChatMessage(
           uid1: getCurrentChef().id,
           uid2: otherUserUid,
           message: message,
+        );
+        await getUserAndSentNotification(
+          userId: otherUserUid,
+          body: message.content,
+
         );
       }
     } else {
@@ -150,12 +155,31 @@ class ChatChefCubit extends Cubit<ChatChefState> {
         messageType: MessageType.text,
         sentAt: Timestamp.fromDate(chatMessage.createdAt),
       );
-      databaseService.sendChatMessage(
+      await databaseService.sendChatMessage(
         uid1: getCurrentChef().id,
         uid2: otherUserUid,
         message: message,
       );
+      await getUserAndSentNotification(
+        userId: otherUserUid,
+        body: message.content,
+      );
     }
   }
 
+  Future<void> getUserAndSentNotification(
+      {required String userId, String? body}) async {
+    DocumentSnapshot<UserModel?> user = await databaseService.getUser(userId);
+    DocumentSnapshot<ChefModel?> current = await databaseService.getChef(
+        authService.uid!);
+    if (user
+        .data()
+        ?.fcm != null) {
+      await sendNotificationToDevice(
+        user.data()!.fcm!,
+        title:current.data()!.name!,
+        body: body,
+      );
+    }
+  }
 }

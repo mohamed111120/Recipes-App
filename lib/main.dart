@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:food_recipes/app.dart';
 import 'bloc_observer.dart';
 import 'core/services/cache/shered_manager.dart';
+import 'core/services/http.dart';
+import 'core/services/local_notification_service.dart';
+import 'core/services/push_notification_service.dart';
 import 'core/services/register_service.dart';
 import 'firebase_options.dart';
 
@@ -12,9 +15,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await LocalNotificationService.initialize();
+  await PushNotificationService.init();
   await SharedService.init();
+  print('=================================================');
+  print('=================================================');
+  await getAccessToken();
+  print('=================================================');
+  print('=================================================');
   registerService();
-  Bloc.observer = MyBlocObserver();
+    Bloc.observer = MyBlocObserver();
   runApp(const FoodRecipes());
 }
 

@@ -304,4 +304,43 @@ class DatabaseService {
       'recipe time': recipeTime,
     });
   }
+
+  Future<void> updateUser({required UserModel userModel}) async {
+    await _usersCollection!.doc(userModel.uid).update({
+      'name': userModel.name,
+      'address': userModel.address,
+      'phoneNumber': userModel.phoneNumber,
+    });
+  }
+
+  Future<void> updateUserFCM({
+    required String fcm,
+    required String userId,
+  }) async {
+    await _usersCollection!.doc(userId).update({
+      'fcm': fcm,
+    });
+  }
+
+  Future<void> updateChefFCM({
+    required String fcm,
+    required String chefId,
+  }) async {
+    await _chefsCollection!.doc(chefId).update({
+      'fcm': fcm,
+    });
+  }
+
+  Future<void> updateChef({required ChefModel chefModel}) async {
+    await _chefsCollection!.doc(chefModel.uid).update({
+      'chef name': chefModel.name,
+      'chef address': chefModel.address,
+      'chef phone number': chefModel.phoneNumber,
+      'chef years of experience': chefModel.yearsOfExperience,
+    });
+  }
+
+  getAllRecipes() async {
+    return _recipesCollection!.get();
+  }
 }

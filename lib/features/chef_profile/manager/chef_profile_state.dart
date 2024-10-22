@@ -7,3 +7,6 @@ final class ChefProfileInitial extends ChefProfileState {}
 final class ChefSignOutSuccess extends ChefProfileState {}
 final class ChefSignOutError extends ChefProfileState {}
 final class GetCurrentChefProfileData extends ChefProfileState {}
+final class ChangeEditMode extends ChefProfileState {}
+final class EditProfileSuccess extends ChefProfileState {}
+final class EditProfileError extends ChefProfileState {}

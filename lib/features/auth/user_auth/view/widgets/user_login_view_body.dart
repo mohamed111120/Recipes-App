@@ -36,50 +36,77 @@ class UserLoginViewBody extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: UserLoginCubit.get(context).formKey,
-              autovalidateMode: UserLoginCubit.get(context).autoValidateMode,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Email Address',
-                    style: AppTextStyles.bold16
-                        .copyWith(color: AppColors.secondaryColor),
-                  ),
-                  CustomTextFormField(
-                    controller: UserLoginCubit.get(context).emailController,
-                    prefixIcon: Icons.person,
-                  ),
-                  Text(
-                    'Password',
-                    style: AppTextStyles.bold16
-                        .copyWith(color: AppColors.secondaryColor),
-                  ),
-                  CustomTextFormField(
-                    controller: UserLoginCubit.get(context).passwordController,
-                    prefixIcon: Icons.password,
-                  ),
-                  SizedBox(height: 20),
-                  CustomButton(
-                      text: 'Login',
-                      onTap: () {
-                        if (UserLoginCubit.get(context)
-                            .formKey
-                            .currentState!
-                            .validate()) {
-                          UserLoginCubit.get(context).userLogin();
-                        } else {
-                          UserLoginCubit.get(context).autoValidateMode =
-                              AutovalidateMode.always;
-                        }
-                      }),
-                ],
+          child: CustomScrollView(
+            slivers: [
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Column(
+                  children: [
+                    Expanded(child: SizedBox()),
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Center(
+                        child: Form(
+                          key: UserLoginCubit.get(context).formKey,
+                          autovalidateMode:
+                              UserLoginCubit.get(context).autoValidateMode,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Image.asset(
+                                  'assets/icons/login_user.png',
+                                  height: 100,
+                                ),
+                              ),
+                              SizedBox(height: 50),
+                              Text(
+                                'Email Address',
+                                style: AppTextStyles.bold16
+                                    .copyWith(color: AppColors.secondaryColor),
+                              ),
+                              CustomTextFormField(
+                                controller:
+                                    UserLoginCubit.get(context).emailController,
+                                prefixIcon: Icons.person,
+                              ),
+                              Text(
+                                'Password',
+                                style: AppTextStyles.bold16
+                                    .copyWith(color: AppColors.secondaryColor),
+                              ),
+                              CustomTextFormField(
+                                controller:
+                                    UserLoginCubit.get(context).passwordController,
+                                prefixIcon: Icons.password,
+                              ),
+                              SizedBox(height: 20),
+                              CustomButton(
+                                  text: 'Login',
+                                  onTap: () {
+                                    if (UserLoginCubit.get(context)
+                                        .formKey
+                                        .currentState!
+                                        .validate()) {
+                                      UserLoginCubit.get(context).userLogin();
+                                    } else {
+                                      UserLoginCubit.get(context).autoValidateMode =
+                                          AutovalidateMode.always;
+                                    }
+                                  }),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(child: SizedBox()),
+
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
         );
       },

@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_recipes/core/services/auth_service.dart';
 import 'package:food_recipes/core/services/database_service.dart';
@@ -26,6 +27,19 @@ class ChefProfileCubit extends Cubit<ChefProfileState> {
   final StorageService storageService;
   final MediaService mediaService;
   ChefModel? currentChef;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController yearsOfExperienceController = TextEditingController();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  bool editMode = false;
+
+
+  editProfileMode() {
+    editMode = !editMode;
+    emit(ChangeEditMode());
+  }
+
 
   getChefProfileData() async {
     await databaseService.getChef(authService.uid ?? '').then(
@@ -33,6 +47,11 @@ class ChefProfileCubit extends Cubit<ChefProfileState> {
         currentChef = value.data();
       },
     );
+
+    nameController.text = currentChef?.name ?? '';
+    addressController.text = currentChef?.address ?? '';
+    phoneNumberController.text = currentChef?.phoneNumber ?? '';
+    yearsOfExperienceController.text = currentChef?.yearsOfExperience.toString() ?? '';
     emit(GetCurrentChefProfileData());
   }
 
@@ -49,5 +68,27 @@ class ChefProfileCubit extends Cubit<ChefProfileState> {
 
      return databaseService.getChefRecipes(currentChef?.uid ?? '');
 
+  }
+  editChefProfile(
+      {required String name,
+        required String address,
+        required String phoneNumber,
+        required String yearsOfExperience,
+      }) async {
+    ChefModel chefModel = currentChef!;
+    chefModel.name = name;
+    chefModel.address = address;
+    chefModel.phoneNumber = phoneNumber;
+    chefModel.yearsOfExperience = int.parse(yearsOfExperience);
+    try {
+
+      await databaseService.updateChef(chefModel: chefModel);
+
+      emit(EditProfileSuccess());
+    } on Exception catch (e) {
+
+      emit(EditProfileError());
+      // TODO
+    }
   }
 }

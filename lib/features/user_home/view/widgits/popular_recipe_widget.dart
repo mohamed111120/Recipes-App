@@ -45,7 +45,7 @@ class PopularRecipeWidget extends StatelessWidget {
                 Text(
                   recipeModel.recipeDescription ?? '',
                   style: AppTextStyles.bold16.copyWith(color: Colors.black),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow:  TextOverflow.ellipsis,
                 ),
                 const Spacer(),

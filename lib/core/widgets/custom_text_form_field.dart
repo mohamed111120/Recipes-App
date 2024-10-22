@@ -12,6 +12,7 @@ class CustomTextFormField extends StatelessWidget {
     this.hintText,
     this.stepNum,
     this.validator,
+    this.readOnly = false,
   });
 
   final void Function()? onTap;
@@ -21,7 +22,7 @@ class CustomTextFormField extends StatelessWidget {
   final String? hintText;
   final int? stepNum;
   final String? Function(String?)? validator;
-
+  final bool readOnly;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -38,6 +39,7 @@ class CustomTextFormField extends StatelessWidget {
                 return null;
               }
             },
+        readOnly: readOnly,
         keyboardType: keyboardType,
         onTap: onTap,
         decoration: InputDecoration(

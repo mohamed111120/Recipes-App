@@ -7,3 +7,6 @@ final class UserProfileInitial extends UserProfileState {}
 final class GetCurrentUserProfileData extends UserProfileState {}
 final class UserSignOutSuccess extends UserProfileState {}
 final class UserSignOutError extends UserProfileState {}
+final class ChangeEditMode extends UserProfileState {}
+final class EditProfileSuccess extends UserProfileState {}
+final class EditProfileError extends UserProfileState {}

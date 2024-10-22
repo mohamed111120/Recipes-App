@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_recipes/core/utils/helper_functions/check_is_user_function.dart';
@@ -35,6 +36,11 @@ class UserLoginCubit extends Cubit<UserLoginState> {
       bool? isUser = await checkISUser(authService.uid);
       if (isUser) {
         SharedService.set(key: SharedKeys.uid, value: authService.uid);
+         String? fcm = await FirebaseMessaging.instance.getToken();
+       await  databaseService.updateUserFCM(
+          userId: authService.uid!,
+          fcm: fcm!,
+        );
         emit(UserLoginSuccess());
       } else {
         await authService.logout();

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -51,8 +52,11 @@ class UserSignUpCubit extends Cubit<UserSignUpState> {
       if (userImageFile != null) {
         await uploadUserImage(image: userImageFile!);
       }
+      var fcm = await FirebaseMessaging.instance.getToken().toString();
+
       await createUserProfile(
         userModel: UserModel(
+          fcm: fcm,
           favoriteRecipes: [],
           uid: authService.uid,
           name: nameController?.text ?? '',

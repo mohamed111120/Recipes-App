@@ -6,6 +6,7 @@ class ChefModel {
   String? phoneNumber;
   String? address;
   int? yearsOfExperience;
+  String? fcm ;
 
   ChefModel({
     required this.name,
@@ -15,6 +16,7 @@ class ChefModel {
     required this.phoneNumber,
     required this.address,
     required this.yearsOfExperience,
+    required this.fcm,
   });
 
   ChefModel.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class ChefModel {
     phoneNumber = json['chef phone number'];
     address = json['chef address'];
     yearsOfExperience = json['chef years of experience'];
+    fcm = json['fcm'];
   }
 
   Map<String, dynamic> toJson() {
@@ -36,6 +39,7 @@ class ChefModel {
       'chef phone number': phoneNumber,
       'chef address': address,
       'chef years of experience': yearsOfExperience,
+      'fcm': fcm
     };
   }
 }

@@ -8,8 +8,10 @@ import 'package:food_recipes/core/services/database_service.dart';
 import 'package:food_recipes/core/services/media_service.dart';
 import 'package:food_recipes/core/services/storage_service.dart';
 import 'package:food_recipes/main_models/message_model.dart';
+import 'package:food_recipes/main_models/user_model.dart';
 import 'package:meta/meta.dart';
 import '../../../core/services/auth_service.dart';
+import '../../../core/services/http.dart';
 import '../../../main_models/chat_model.dart';
 import '../../../main_models/chef_model.dart';
 
@@ -75,10 +77,14 @@ class ChatUserCubit extends Cubit<ChatUserState> {
           messageType: MessageType.image,
           sentAt: Timestamp.fromDate(chatMessage.createdAt),
         );
-        databaseService.sendChatMessage(
+        await databaseService.sendChatMessage(
           uid1: getCurrentUser().id,
           uid2: otherUserUid,
           message: message,
+        );
+        await getChefAndSentNotification(
+          chefID: otherUserUid,
+          body: message.content,
         );
       }
     } else {
@@ -88,10 +94,14 @@ class ChatUserCubit extends Cubit<ChatUserState> {
         messageType: MessageType.text,
         sentAt: Timestamp.fromDate(chatMessage.createdAt),
       );
-      databaseService.sendChatMessage(
+      await databaseService.sendChatMessage(
         uid1: getCurrentUser().id,
         uid2: otherUserUid,
         message: message,
+      );
+      await getChefAndSentNotification(
+        chefID: otherUserUid,
+        body: message.content,
       );
     }
   }
@@ -106,7 +116,7 @@ class ChatUserCubit extends Cubit<ChatUserState> {
     required ChatUser otherUser,
   }) {
     List<ChatMessage> chatMessages = messages.map(
-          (m) {
+      (m) {
         if (m.messageType == MessageType.image) {
           return ChatMessage(
             user: m.senderId == getCurrentUser().id
@@ -133,12 +143,13 @@ class ChatUserCubit extends Cubit<ChatUserState> {
       },
     ).toList();
     chatMessages.sort(
-          (a, b) {
+      (a, b) {
         return b.createdAt.compareTo(a.createdAt);
       },
     );
     return chatMessages;
   }
+
   Future<File?> getImageFormGallery() async {
     return await mediaService.getImageFromGallary();
   }
@@ -154,5 +165,19 @@ class ChatUserCubit extends Cubit<ChatUserState> {
       chatId: chatId,
     );
     return chatImage;
+  }
+
+  Future<void> getChefAndSentNotification(
+      {required String chefID, String? body}) async {
+    DocumentSnapshot<ChefModel?> chef = await databaseService.getChef(chefID);
+    DocumentSnapshot<UserModel?> current =
+        await databaseService.getUser(authService.uid!);
+    if (chef.data()?.fcm != null) {
+      await sendNotificationToDevice(
+        chef.data()!.fcm!,
+        title: current.data()!.name!,
+        body: body,
+      );
+    }
   }
 }

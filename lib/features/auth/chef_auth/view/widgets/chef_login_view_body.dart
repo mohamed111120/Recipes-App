@@ -47,6 +47,14 @@ class ChefLoginViewBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      'assets/icons/login_chef.png',
+                      height: 120,
+                    ),
+                  ),
+                  SizedBox(height: 50),
                   Text(
                     'Email Address',
                     style: AppTextStyles.bold16

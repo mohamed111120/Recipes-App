@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:food_recipes/main_models/user_model.dart';
 import 'package:meta/meta.dart';
@@ -24,16 +25,25 @@ class UserProfileCubit extends Cubit<UserProfileState> {
   final StorageService storageService;
   final MediaService mediaService;
   UserModel? currentUser;
+  bool editMode = false;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneNumberController = TextEditingController();
 
-
+ GlobalKey<FormState> formKey = GlobalKey<FormState>();
   getUserProfileData() async {
     await databaseService.getUser(authService.uid ?? '').then(
-          (value) {
+      (value) {
         currentUser = value.data();
       },
     );
+
+    nameController.text = currentUser?.name ?? '';
+    addressController.text = currentUser?.address ?? '';
+    phoneNumberController.text = currentUser?.phoneNumber ?? '';
     emit(GetCurrentUserProfileData());
   }
+
 
   signOut() async {
     var result = await authService.logout();
@@ -41,6 +51,29 @@ class UserProfileCubit extends Cubit<UserProfileState> {
       emit(UserSignOutSuccess());
     } else {
       emit(UserSignOutError());
+    }
+  }
+
+  editProfileMode() {
+    editMode = !editMode;
+    emit(ChangeEditMode());
+  }
+
+  editUserProfile(
+      {required String name,
+      required String address,
+      required String phoneNumber}) async {
+    UserModel userModel = currentUser!;
+    userModel.name = name;
+    userModel.address = address;
+    userModel.phoneNumber = phoneNumber;
+    try {
+      await databaseService.updateUser(userModel: userModel);
+
+      emit(EditProfileSuccess());
+    } on Exception catch (e) {
+      emit(EditProfileError());
+      // TODO
     }
   }
 }

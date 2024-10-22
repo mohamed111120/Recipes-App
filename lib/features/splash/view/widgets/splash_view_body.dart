@@ -57,104 +57,106 @@ class _SplashViewBodyState extends State<SplashViewBody>
       });
     },);
  
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      width: double.infinity,
-      height: double.infinity,
-      decoration: const BoxDecoration(
-        color: Color(0xff70B9BE),
-      ),
-      child: Stack(
-        children: [
-          SvgPicture.asset('assets/splash_images/background_line.svg'),
-          Column(
-            children: [
-              const SizedBox(height: 40),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Text(
-                    'Later',
-                    style: AppTextStyles.bold18,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 80),
-              AnimatedBuilder(
-                animation: firstRowAnimationController,
-                builder: (context, child) {
-                  return Transform(
-                    alignment: Alignment.centerRight,
-                    transform: Matrix4.identity()
-                      ..rotateZ(firstRowAnimation.value * 3.14 / 180),
-                    child: SplashFoodRow(
-                      firstImage: AppImages.splashFood1,
-                      secondImage: AppImages.splashFood2,
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        // width: double.infinity,
+        // height: double.infinity,
+        decoration: const BoxDecoration(
+          color: Color(0xff70B9BE),
+        ),
+        child: Stack(
+          children: [
+            SvgPicture.asset('assets/splash_images/background_line.svg'),
+            Column(
+              children: [
+                const SizedBox(height: 40),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Later',
+                      style: AppTextStyles.bold18,
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 25),
-              AnimatedScale(
-                scale: rowTowScale,
-
-                duration: const Duration(seconds:2),
-                curve: Curves.fastOutSlowIn,
-                child: const SplashFoodRow(
-                  firstImage: AppImages.splashFood3,
-                  secondImage: AppImages.splashFood4,
+                  ],
                 ),
-              ),
-              const SizedBox(height: 25),
-              AnimatedBuilder(
-                animation: secondRowAnimationController,
-                builder: (context, child) {
-                  return Transform(
-                    alignment: Alignment.centerLeft,
-                    transform: Matrix4.identity()
-                      ..rotateZ(secondRowAnimation.value * 3.14 / 180),
-                    child: SplashFoodRow(
-                      firstImage: AppImages.splashFood5,
-                      secondImage: AppImages.splashFood6,
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 60),
-              const Text(
-                'Help your path to health goals with happiness',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.splashTextStyle,
-              ),
-              const SizedBox(height: 24),
-              CustomButton(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserLoginView(),
-                    ),
-                  );
-                },
-                text: 'Login as User',
-              ),
-              const SizedBox(height: 12),
-              CustomButton(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ChefLoginView(),
-                    ),
-                  );
-                },
-                text: 'Login as Chef',
-              ),
-              const SizedBox(height: 16),
-              CreateNewAccountButton(),
-            ],
-          ),
-        ],
+                const SizedBox(height: 80),
+                AnimatedBuilder(
+                  animation: firstRowAnimationController,
+                  builder: (context, child) {
+                    return Transform(
+                      alignment: Alignment.centerRight,
+                      transform: Matrix4.identity()
+                        ..rotateZ(firstRowAnimation.value * 3.14 / 180),
+                      child: SplashFoodRow(
+                        firstImage: AppImages.splashFood1,
+                        secondImage: AppImages.splashFood2,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 25),
+                AnimatedScale(
+                  scale: rowTowScale,
+
+                  duration: const Duration(seconds:2),
+                  curve: Curves.fastOutSlowIn,
+                  child: const SplashFoodRow(
+                    firstImage: AppImages.splashFood3,
+                    secondImage: AppImages.splashFood4,
+                  ),
+                ),
+                const SizedBox(height: 25),
+                AnimatedBuilder(
+                  animation: secondRowAnimationController,
+                  builder: (context, child) {
+                    return Transform(
+                      alignment: Alignment.centerLeft,
+                      transform: Matrix4.identity()
+                        ..rotateZ(secondRowAnimation.value * 3.14 / 180),
+                      child: SplashFoodRow(
+                        firstImage: AppImages.splashFood5,
+                        secondImage: AppImages.splashFood6,
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 60),
+                const Text(
+                  'Help your path to health goals with happiness',
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.splashTextStyle,
+                ),
+                const SizedBox(height: 24),
+                CustomButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UserLoginView(),
+                      ),
+                    );
+                  },
+                  text: 'Login as User',
+                ),
+                const SizedBox(height: 12),
+                CustomButton(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChefLoginView(),
+                      ),
+                    );
+                  },
+                  text: 'Login as Chef',
+                ),
+                const SizedBox(height: 16),
+                CreateNewAccountButton(),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -43,6 +43,9 @@ class FeaturedListViewItem extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
+                    textAlign:  TextAlign.left,
+                    maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                     recipeModel.recipeName ?? '',
                     style: AppTextStyles.bold18,
                   ),

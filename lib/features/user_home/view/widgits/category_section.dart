@@ -19,9 +19,6 @@ class CategorySection extends StatelessWidget {
                 'Categories',
                 style: AppTextStyles.bold20,
               ),
-              Text('See all',
-                  style: AppTextStyles.bold14
-                      .copyWith(color: AppColors.primaryColor)),
             ],
           ),
           const SizedBox(height: 12),
